@@ -1,0 +1,28 @@
+from tkinter import *
+SCREEN = Tk()
+SCREEN.title("Title Bar")
+SCREEN.geometry("1000x1000")
+SCREEN.config(background=("Green"))
+menubar = Menu(SCREEN)
+#File menubar
+file = Menu(menubar)
+menubar.add_cascade(label="File",menu=file)
+file.add_command(label="New File",command=None)
+file.add_separator()
+file.add_command(label="Open File",command=None)
+file.add_command(label="Open Folder",command=None)
+file.add_separator()
+file.add_command(label="Save",command=None)
+file.add_command(label="Save As",command=None)
+
+edit = Menu(menubar,tearoff=0)
+menubar.add_cascade(label="Edit",menu=edit)
+edit.add_command(label="Undo",command=None)
+edit.add_command(label="Redo",command=None)
+edit.add_separator()
+edit.add_command(label="Cut",command=None)
+edit.add_command(label="Copy",command=None)
+edit.add_command(label="Paste",command=None)
+
+SCREEN.config(menu=menubar)
+mainloop()
