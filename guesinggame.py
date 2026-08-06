@@ -19,15 +19,34 @@ def popup():
     namevar = namentry.get()
     messagebox.showinfo("Popup.pop-up",message="Hello, "+ str(namevar) + ", And welcome, to the AMAZING NUMBER GUESSING GAME! (DON'T YOU DARE SAY TADC IS DEAD I WILL FIND YOU)")
 
-label_x = windowx / 2 - windowx / 2.1
-label_y = windowy / 5
-namelab = Label(SCREEN, text="What's your name?",font=("Unispace-Bold",12))
-namelab.place(x=label_x, y=label_y)
-namentry = Entry(SCREEN)
-namentry.place(x=label_x + 200, y=label_y)
-nameton = Button(SCREEN,text="OK",command=popup)
-nameton.place(x=label_x + 350, y=label_y)
+def a_function():
+    global guessentry, thenumber
+    guess = int(guessentry.get())
+    if guess > thenumber:
+        messagebox.showerror("You're wrong💀😭🥀",message="Your guess is of a greater value than THE number.")
+    if guess < thenumber:
+        messagebox.showerror("You're wrong💀😭🥀",message="Your guess is of a lesser value than THE number.")
+    if guess == thenumber:
+        messagebox.showinfo("You're CORRECT!",message="Your guess is THE number. GREAT JOB!👏")
 
+
+
+label1_x = windowx / 2 - windowx / 2.1
+label1_y = windowy / 5
+namelab = Label(SCREEN, text="What's your name?",font=("Unispace-Bold",12))
+namelab.place(x=label1_x, y=label1_y)
+namentry = Entry(SCREEN)
+namentry.place(x=label1_x + 200, y=label1_y)
+nameton = Button(SCREEN,text="OK",command=popup)
+nameton.place(x=label1_x + 350, y=label1_y)
+label2_x = windowx / 2 - windowx / 2.1
+label2_y = windowy / 5 + windowy / 15
+guesslab = Label(SCREEN, text="Guess the number.",font=("Unispace-Bold",12))
+guesslab.place(x=label2_x, y=label2_y)
+guessentry = Entry(SCREEN)
+guessentry.place(x=label2_x + 200, y=label2_y)
+guesston = Button(SCREEN,text="OK",command=a_function)
+guesston.place(x=label2_x + 350, y=label2_y)
 
 
 mainloop()
