@@ -47,17 +47,58 @@ def save():
     storage = asksaveasfile(defaultextension=".txt")
     if storage:
         print(addressbook,file=storage)
+        reset()
     else:
         messagebox.showerror("Error","Address book Not Saved!")
-        
 
-Label(SCREEN, text="My Address Book", font=("Arial", 18)).place(x=20, y=12)
+def edit():
+    clearall()
+    index = book_list.curselection()
+    if index:
+        nameentry.insert(0,book_list.get(index))
+        details = addressbook[nameentry.get()]
+        addressentry.insert(0,details[0])
+        mobileentry.insert(0,details[1])
+        emailentry.insert(0,details[2])
+        birthdayentry.insert(0,details[3])
+    else:
+        messagebox.showerror("ERROR","Select a name!")
 
-openbutton = Button(SCREEN, text="Open", width=12)
+def delete():
+    index = book_list.curselection()
+    if index:
+        del addressbook[book_list.get(index)]
+        book_list.delete(index)
+        clearall()
+    else:
+        messagebox.showerror("ERROR","Select a name!")
+
+def reset():
+    clearall()
+    book_list.delete(0,END)
+    addressbook.clear()
+    myaddressbooklab.configure(text="My Address Book")
+
+def open():
+    global addressbook
+    reset()
+    file = askopenfile(title="Open File")
+    if file:
+        addressbook = eval(file.read())
+        for i in addressbook.keys():
+            book_list.insert(END,i)
+        myaddressbooklab.configure(text=os.path.basename(file.name))
+    else:
+        messagebox.showerror("ERROR","No Address book Opened!")
+
+myaddressbooklab = Label(SCREEN, text="My Address Book", font=("Arial", 18)).place(x=20, y=12)
+
+openbutton = Button(SCREEN, text="Open", width=12,command=open)
 openbutton.place(x=470, y=12)
 
 book_list = Listbox(SCREEN, width=30, height=18)
 book_list.place(x=20, y=80)
+book_list.bind("<<ListboxSelect>>",display)
 
 Label(SCREEN, text="Name:").place(x=390, y=105)
 nameentry = Entry(SCREEN, width=24)
@@ -79,16 +120,16 @@ Label(SCREEN, text="Birthday:").place(x=390, y=345)
 birthdayentry = Entry(SCREEN, width=24)
 birthdayentry.place(x=490, y=345)
 
-editbutton = Button(SCREEN, text="Edit", width=10)
+editbutton = Button(SCREEN, text="Edit", width=10,command=edit)
 editbutton.place(x=20, y=420)
 
-deletebutton = Button(SCREEN, text="Delete", width=10)
+deletebutton = Button(SCREEN, text="Delete", width=10,command=delete)
 deletebutton.place(x=140, y=420)
 
 updatebutton = Button(SCREEN, text="Update/Add", width=12, command=update)
 updatebutton.place(x=490, y=420)
 
-savebutton = Button(SCREEN, text="Save", width=28)
+savebutton = Button(SCREEN, text="Save", width=28,command=save)
 savebutton.place(x=185, y=470)
 
 mainloop()
