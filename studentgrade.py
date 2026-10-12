@@ -1,4 +1,6 @@
+import csv
 from tkinter import *
+from tkinter import filedialog
 
 SCREEN = Tk()
 SCREEN.title("Grade Calculator")
@@ -57,11 +59,54 @@ def save_student():
         result_text.insert(END, "Please enter valid marks before saving.")
         return
 
-    with open("student_records.txt", "a") as file:
-        file.write(f"{student_name},{student_roll},{math},{science},{english}\n")
+    file_path = filedialog.asksaveasfilename(
+        title="Save Student",
+        defaultextension=".csv",
+        filetypes=[("CSV files", "*.csv"), ("Text files", "*.txt"), ("All files", "*.*")],
+    )
+    if not file_path:
+        return
+
+    with open(file_path, "w", newline="", encoding="utf-8") as file:
+        csv.writer(file).writerow([student_name, student_roll, math, science, english])
 
     result_text.delete("1.0", END)
     result_text.insert(END, f"Student saved successfully:\nName: {student_name}\nRoll No: {student_roll}")
+
+
+def open_student():
+    file_path = filedialog.askopenfilename(
+        title="Open Student",
+        filetypes=[("CSV files", "*.csv"), ("Text files", "*.txt"), ("All files", "*.*")],
+    )
+    if not file_path:
+        return
+
+    try:
+        with open(file_path, newline="", encoding="utf-8") as file:
+            records = [row for row in csv.reader(file) if row]
+        if not records or len(records[-1]) != 5:
+            raise ValueError("The selected file does not contain a valid student record.")
+        student_name, student_roll, math, science, english = records[-1]
+        float(math)
+        float(science)
+        float(english)
+    except (OSError, UnicodeError, ValueError, csv.Error) as error:
+        result_text.delete("1.0", END)
+        result_text.insert(END, f"Could not open student record: {error}")
+        return
+
+    name_entry.delete(0, END)
+    name_entry.insert(0, student_name)
+    roll_entry.delete(0, END)
+    roll_entry.insert(0, student_roll)
+    math_entry.delete(0, END)
+    math_entry.insert(0, math)
+    science_entry.delete(0, END)
+    science_entry.insert(0, science)
+    english_entry.delete(0, END)
+    english_entry.insert(0, english)
+    calculate_grade()
 
 
 heading = Label(SCREEN, text="Student Grading System", font=("Arial", 36, "bold"), bg="#d9d9d9")
@@ -97,6 +142,9 @@ calculate_button.place(x=280, y=400)
 
 save_button = Button(SCREEN,text="Save Student",width=18,height=2,command=save_student,bg="#36c4ff",fg="black",font=("Arial", 18, "bold"),bd=2)
 save_button.place(x=280, y=470)
+
+open_button = Button(SCREEN,text="Open Student",width=18,height=2,command=open_student,bg="#36c4ff",fg="black",font=("Arial", 18, "bold"),bd=2)
+open_button.place(x=520, y=470)
 
 output_frame = Frame(SCREEN, width=740, height=120, bg="#d9d9d9", bd=0)
 output_frame.place(x=80, y=540)
