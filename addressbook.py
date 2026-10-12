@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
 from tkinter.filedialog import *
+import ast
 import os
 
 SCREEN = Tk()
@@ -81,17 +82,26 @@ def reset():
 
 def open():
     global addressbook
-    reset()
-    file = askopenfile(title="Open File")
-    if file:
-        addressbook = eval(file.read())
-        for i in addressbook.keys():
-            book_list.insert(END,i)
-        myaddressbooklab.configure(text=os.path.basename(file.name))
-    else:
-        messagebox.showerror("ERROR","No Address book Opened!")
+    addressbook_file = askopenfile(title="Open File")
+    if not addressbook_file:
+        return
+    try:
+        with addressbook_file:
+            loaded_addressbook = ast.literal_eval(addressbook_file.read())
+        if not isinstance(loaded_addressbook, dict):
+            raise ValueError("The selected file is not an address book.")
+    except (OSError, SyntaxError, ValueError) as error:
+        messagebox.showerror("ERROR", f"Could not open address book: {error}")
+        return
 
-myaddressbooklab = Label(SCREEN, text="My Address Book", font=("Arial", 18)).place(x=20, y=12)
+    reset()
+    addressbook = loaded_addressbook
+    for name in addressbook:
+        book_list.insert(END, name)
+    myaddressbooklab.configure(text=os.path.basename(addressbook_file.name))
+
+myaddressbooklab = Label(SCREEN, text="My Address Book", font=("Arial", 18))
+myaddressbooklab.place(x=20, y=12)
 
 openbutton = Button(SCREEN, text="Open", width=12,command=open)
 openbutton.place(x=470, y=12)
