@@ -1,5 +1,11 @@
 from tkinter import *
 from gtts import gTTS
 
-speech = gTTS(text="Hello", lang="en")
-speech.save("ttsclip.mp3")
+SCREEN = Tk()
+SCREEN.title("TTS_PROGRAM")
+SCREEN.geometry("720x520")
+SCREEN.config(background="#d9d9d9")
+
+ttslable = Label(SCREEN,text="Text To Speech PROGRAM")
+
+mainloop()
