@@ -11,7 +11,7 @@ def speechtotext():
     with sr.Microphone() as source:
         audio = speech.listen(source)
         try:
-            text = speech.recognize_azure(audio)
+            text = speech.recognize_google(audio)
         except:
             text = "The Speech Recognizer Couldn't Recognize your Speech! Try Using A Different Microphone."
         speechbox.delete(1.0,END)
